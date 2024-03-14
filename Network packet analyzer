@@ -1,0 +1,17 @@
+import scapy.all as scapy
+
+def analyze_packet(packet):
+    if packet.haslayer(scapy.IP):
+        ip_src = packet[scapy.IP].src
+        ip_dst = packet[scapy.IP].dst
+        protocol = packet[scapy.IP].proto
+        payload = packet[scapy.Raw].load if packet.haslayer(scapy.Raw) else None
+        
+        print(f"Source IP: {ip_src}, Destination IP: {ip_dst}, Protocol: {protocol}, Payload: {payload}")
+
+def packet_sniffer(interface):
+    scapy.sniff(iface=interface, prn=analyze_packet, store=False)
+
+if __name__ == "__main__":
+    interface = "eth0"  # Change this to your network interface
+    packet_sniffer(interface)
